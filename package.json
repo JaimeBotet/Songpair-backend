@@ -1,0 +1,36 @@
+{
+  "name": "songpair-backend",
+  "version": "1.0.0",
+  "description": "Web Application based on getting the current playing song on the user device and share it with others on a map. So a user can interact and discover what others around him is listening!",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [
+    "spotify",
+    "song",
+    "share",
+    "social",
+    "discover",
+    "near",
+    "users",
+    "music",
+    "playing"
+  ],
+  "author": "Guilherme Carra and Jaime Botet",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.14"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
