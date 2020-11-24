@@ -1,13 +1,9 @@
-import express from 'express';
-import cors from 'cors';
-import config from './config/app-config.js'
-import authRouter from './routers/auth.routes.js'
+require("dotenv").config();
 
-const app = express();
+const app = require("./server");
 
-app.use(cors({ origin: config.app.clientDomain }));
-app.use(express.json());
+const config = require("./config/app-config")[process.env.NODE_ENV || "development"];
 
-app.use('/', authRouter);
-
-app.listen(config.app.port);
+app.listen(config.app.port, () => {
+    console.log(`Server listening on http://localhost:${config.app.port}`);
+});
