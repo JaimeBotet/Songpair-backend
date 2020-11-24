@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
+const dotenv = require("dotenv");
+const fs = require("fs");
 
 const result = dotenv.config();
 
@@ -9,18 +9,38 @@ if (result.error) {
 	dotenv.config();
 }
 
-export default {
-	app: {
-		port: process.env.APP_PORT,
-		accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
-		refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
-		clientDomain: process.env.CLIENT_DOMAIN,
+module.exports = {
+	development: {
+		app: {
+			port: process.env.APP_PORT,
+			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+			clientDomain: process.env.CLIENT_DOMAIN,
+		},
+		db: {
+			url: process.env.MONGO_DB_URL_DEVELOPMENT,
+		}
 	},
-	db: {
-		host: process.env.DB_HOST,
-		port: process.env.DB_PORT,
-		user: process.env.DB_USER,
-		pass: process.env.DB_PASS,
-		name: process.env.DB_NAME
+	test: {
+		app: {
+			port: process.env.APP_PORT,
+			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+			clientDomain: process.env.CLIENT_DOMAIN,
+		},
+		db: {
+			url: process.env.MONGO_DB_URL_TEST,
+		}
+	},
+	production: {
+		app: {
+			port: process.env.APP_PORT,
+			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+			clientDomain: process.env.CLIENT_DOMAIN,
+		},
+		db: {
+			url: process.env.MONGO_DB_URL_PRODUCTION,
+		}
 	}
 };
