@@ -37,6 +37,7 @@ exports.getUserRegister = async function(code, uri) {
                     'Accept': 'application/json'
                 }
             });
+            user.data.tokens = token.data;
             return {data: user.data, error: null};
         } catch (e) {
             return {data: null, error: e.response.data.error.message};
