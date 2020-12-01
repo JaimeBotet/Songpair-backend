@@ -12,7 +12,7 @@ async function signUp(req, res, next) {
     if (!user) {
       return res.status(400).send({
         data: null,
-        error: "Already signed up",
+        error: "User already signed up",
       });
     }
 
