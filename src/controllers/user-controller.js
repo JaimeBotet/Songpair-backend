@@ -2,6 +2,7 @@ const passport = require("passport");
 
 const db = require("../models");
 const getSanitizedUser = require("../utils/auth/getSanitizedUser");
+const { generateToken } = require('../utils/RequestsAPI');
 
 async function signUp(req, res, next) {
   passport.authenticate("signup", async (error, user, info) => {
@@ -65,6 +66,45 @@ async function signUp(req, res, next) {
   })(req, res, next);
 }
 
+async function login(req, res, next) {
+  passport.authenticate("login", async (error, user, info) => {
+    if (error) {
+      return next(error);
+    }
+
+    if (!user) {
+      return res.status(400).send({
+        data: null,
+        error: "Wrong email or password",
+      });
+    }
+
+    req.login(user, { session: false }, async (error) => {
+      if (error) return next(error);
+
+      try {
+        const token = await generateToken(user.refreshToken, next);
+
+        if (token.error) return next(error);
+
+        await db.User.findByIdAndUpdate(user._id, { token: token.data.access_token }).catch(next);
+
+        // Send back the token to the user
+        return res.status(200).send({
+          data: {
+            user: user,
+            token: token.data.access_token,
+          },
+          error: null,
+        });
+      } catch (error) {
+        return next(error);
+      }
+    });
+  })(req, res, next);
+}
+
 module.exports = {
-  signUp
+  signUp,
+  login
 };
