@@ -16,6 +16,7 @@ module.exports = {
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
+			BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS),
 		},
 		db: {
 			url: process.env.MONGO_DB_URL_DEVELOPMENT,
@@ -27,6 +28,7 @@ module.exports = {
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
+			BCRYPT_SALT_ROUNDS: 10,
 		},
 		db: {
 			url: process.env.MONGO_DB_URL_TEST,
@@ -38,6 +40,7 @@ module.exports = {
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
+			BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS),
 		},
 		db: {
 			url: process.env.MONGO_DB_URL_PRODUCTION,
