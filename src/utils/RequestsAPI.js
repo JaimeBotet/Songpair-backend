@@ -46,3 +46,22 @@ exports.getUserRegister = async function(code, uri) {
         return {data: null, error: token.error}
     }
 }
+
+exports.generateToken = async function(refreshToken) {
+    try {
+        const tokens = await axios({
+            method: 'POST',
+            url: 'https://accounts.spotify.com/api/token',
+            params: {
+                grant_type: "refresh_token",
+                refresh_token: refreshToken,
+                client_id: process.env.CLIENT_ID,
+                client_secret: process.env.CLIENT_SECRET
+            },
+        });
+        return {data: tokens.data, error: null};
+    } catch (e) {
+        console.log(e);
+        return {data: null, error: e};
+    }
+}
