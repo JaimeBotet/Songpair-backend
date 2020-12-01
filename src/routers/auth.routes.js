@@ -36,4 +36,6 @@ router.get('/signup/spotify', async (req, res) => {
 
 router.post("/signup", userController.signUp);
 
+router.post("/login", userController.login);
+
 module.exports = router;
