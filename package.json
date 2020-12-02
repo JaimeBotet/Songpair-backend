@@ -34,5 +34,9 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://code.assemblerschool.com/guilherme-carra/Songpair-backend-TFM.git"
   }
 }
