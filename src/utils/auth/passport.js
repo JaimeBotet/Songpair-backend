@@ -1,5 +1,8 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const JWTstrategy = require("passport-jwt").Strategy;
+
+//To extract the JWT sent by the user
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
 const db = require("../../models");
@@ -96,6 +99,41 @@ passport.use(
     },
   ),
 );
+
+passport.use(
+  "jwt",
+  new JWTstrategy(
+    {
+      // secret we used to sign the JWT
+      secretOrKey: config.JWT_SECRET,
+
+      // expect the user to send the token as a query parameter with the name 'secret_token'
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(config.JWT_SECRET),
+    },
+    async function jwtStrategyHandler(jwt_payload, done) {
+      try {
+        const user = await db.User.findById(jwt_payload.sub)
+          .exec()
+          .catch((error) => {
+            console.log(error);
+            return done(error);
+          });
+
+        if (user && user.token) {
+          const sanitizedUser = getSanitizedUser(user.toObject());
+
+          // Pass the user details to the next middleware
+          return done(null, sanitizedUser);
+        } else {
+          return done(null, false);
+        }
+      } catch (error) {
+        done(error);
+      }
+    },
+  ),
+);
+
 
 module.exports = {
   initialize: passport.initialize(),

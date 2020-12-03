@@ -1,8 +1,9 @@
 require("dotenv").config();
-const express = require("express");
+const { Router } = require("express");
 const { getUserRegister } = require('../utils/RequestsAPI');
+const passport = require("passport");
 
-const router = express.Router();
+const router = Router();
 
 const userController = require("../controllers/user-controller");
 
@@ -34,8 +35,21 @@ router.get('/signup/spotify', async (req, res) => {
 	}
 });
 
+//First I need to clarify about the redirection after the spotify login is successful.
 router.post("/signup", userController.signUp);
 
 router.post("/login", userController.login);
+
+router.post(
+	"/logout",
+	passport.authenticate("jwt", { session: false }),
+	userController.logout,
+);
+  
+router.get(
+	"/user/me",
+	passport.authenticate("jwt", { session: false }),
+	userController.me,
+);
 
 module.exports = router;

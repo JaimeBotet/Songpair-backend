@@ -1,6 +1,7 @@
 const passport = require("passport");
 
 const db = require("../models");
+
 const getSanitizedUser = require("../utils/auth/getSanitizedUser");
 const { generateToken } = require('../utils/RequestsAPI');
 
@@ -102,6 +103,45 @@ async function login(req, res, next) {
       }
     });
   })(req, res, next);
+}
+
+//First we need to clarify the routes and the other methods of this controller.
+async function me(req, res) {
+  if (req.user) {
+    res.status(200).send({
+      data: {
+        user: req.user,
+      },
+      error: null,
+    });
+  } else {
+    res.status(401).send({
+      data: null,
+      error: "Unauthorized",
+    });
+  }
+}
+
+async function logout(req, res, next) {
+  if (req.user) {
+    const user = req.user;
+
+    const dbUser = await db.User.findOne({ email: user.email }).catch(next);
+    dbUser.token = null;
+    await dbUser.save().catch(next);
+
+    req.logout();
+
+    return res.status(200).send({
+      data: "Ok",
+      error: null,
+    });
+  } else {
+    res.status(401).send({
+      data: null,
+      error: "Unauthorized",
+    });
+  }
 }
 
 module.exports = {
