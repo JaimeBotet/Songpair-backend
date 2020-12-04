@@ -128,15 +128,12 @@ async function login(req, res, next) {
 
 async function nearPeople(req, res, next) {
   const { point } = req.body;
-  console.log(point);
-
-  await db.User.index( { location: "2dsphere" } );
 
   const nearUsers = await db.User.find({
     location:
       { $near:
          {
-           $geometry: { type: "Point",  coordinates: [ 2.1393371, 41.3914637 ] },
+           $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
            $maxDistance: 5000
          }
       }
