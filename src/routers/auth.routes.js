@@ -1,10 +1,10 @@
 require("dotenv").config();
 const express = require("express");
-const {
-	getUserRegister
-} = require('../utils/RequestsAPI');
+const { getUserRegister } = require('../utils/RequestsAPI');
 
 const router = express.Router();
+
+const userController = require("../controllers/user-controller");
 
 router.get('/signup', (req, res) => {
 	let scopes = process.env.SCOPES;
@@ -22,7 +22,7 @@ router.get('/signup/spotify', async (req, res) => {
 	const code = req.query.code;
 
 	const formData = await getUserRegister(code, process.env.SIGNUP_URI);
-	console.log(formData.data.images);
+
 	if (!formData.error) {
 		res
 			.status(200)
@@ -33,5 +33,9 @@ router.get('/signup/spotify', async (req, res) => {
 			.json({data: null, error: formData.error});
 	}
 });
+
+router.post("/signup", userController.signUp);
+
+router.post("/login", userController.login);
 
 module.exports = router;
