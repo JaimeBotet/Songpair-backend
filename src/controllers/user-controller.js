@@ -104,7 +104,29 @@ async function login(req, res, next) {
   })(req, res, next);
 }
 
+async function nearPeople(req, res, next) {
+  const { point } = req.body;
+  console.log(point);
+
+  await db.User.index( { location: "2dsphere" } );
+
+  const nearUsers = await db.User.find({
+    location:
+      { $near:
+         {
+           $geometry: { type: "Point",  coordinates: [ 2.1393371, 41.3914637 ] },
+           $maxDistance: 5000
+         }
+      }
+  });
+
+  console.log(nearUsers);
+
+  res.send('ok')
+}
+
 module.exports = {
   signUp,
-  login
+  login,
+  nearPeople
 };
