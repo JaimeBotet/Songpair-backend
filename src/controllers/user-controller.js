@@ -2,7 +2,7 @@ const passport = require("passport");
 
 const db = require("../models");
 const getSanitizedUser = require("../utils/auth/getSanitizedUser");
-const { generateToken } = require('../utils/RequestsAPI');
+const { generateToken, getSong } = require('../utils/RequestsAPI');
 
 async function signUp(req, res, next) {
   passport.authenticate("signup", async (error, user, info) => {
@@ -138,10 +138,13 @@ async function nearPeople(req, res, next) {
          }
       }
   });
-
   console.log(nearUsers);
 
-  res.send('ok')
+  // const userSong = await getSong(nearUsers[0].token);
+  // console.log(userSong);
+
+
+  res.json({data: nearUsers, error: null});
 }
 
 module.exports = {
