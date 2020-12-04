@@ -1,11 +1,11 @@
-require("dotenv").config();
 const express = require("express");
-const { getUserRegister } = require('../utils/RequestsAPI');
 const passport = require("passport");
+require("dotenv").config();
 
 const router = express.Router();
 
 const userController = require("../controllers/user-controller");
+const { getUserRegister } = require('../utils/RequestsAPI');
 
 router.get('/signup', (req, res) => {
 	let scopes = process.env.SCOPES;
@@ -42,7 +42,7 @@ router.post("/login", userController.login);
 router.post(
 	"/logout",
 	passport.authenticate("bearer",{ session: false}),
-	 userController.logout
-	 );
+	userController.logout
+);
 
 module.exports = router;
