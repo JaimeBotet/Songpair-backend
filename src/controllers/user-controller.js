@@ -126,8 +126,27 @@ async function login(req, res, next) {
   })(req, res, next);
 }
 
+async function nearPeople(req, res, next) {
+  const { point } = req.body;
+
+  const nearUsers = await db.User.find({
+    location:
+      { $near:
+         {
+           $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
+           $maxDistance: 5000
+         }
+      }
+  });
+
+  console.log(nearUsers);
+
+  res.send('ok')
+}
+
 module.exports = {
   signUp,
   login,
-  logout
+  nearPeople,
+  logout,
 };

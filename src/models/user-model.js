@@ -77,6 +77,8 @@ UserSchema.pre("save", async function preSave(next) {
   }
 });
 
+UserSchema.index({ location: "2dsphere" })
+
 UserSchema.methods.comparePassword = async function(candidate) {
   return bcrypt.compare(candidate, this.password);
 };
