@@ -65,3 +65,21 @@ exports.generateToken = async function(refreshToken) {
         return {data: null, error: e};
     }
 }
+
+exports.getSong = async function(token) {
+    try {
+        const music = await axios({
+            method: 'GET',
+            url: 'https://api.spotify.com/v1/me/player/currently-playing',
+            headers: {
+                'Authorization': 'Bearer '+ token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        return {data: music, error: null};
+    } catch (e) {
+        console.log(e);
+        return {data: null, error: e};
+    }
+}
