@@ -66,6 +66,28 @@ async function signUp(req, res, next) {
   })(req, res, next);
 }
 
+async function logout(req,res,next){
+  if (req.user) {
+    const user = req.user;
+
+    const dbUser = await db.User.findOne({ token: user.token }).catch(next);
+    dbUser.token = null;
+    await dbUser.save().catch(next);
+
+    req.logout();
+
+    return res.status(200).send({
+      data: "Ok",
+      error: null,
+    });
+  } else {
+    res.status(401).send({
+      data: null,
+      error: "Unauthorized",
+    });
+  }
+};
+
 async function login(req, res, next) {
   passport.authenticate("login", async (error, user, info) => {
     if (error) {
@@ -128,5 +150,6 @@ async function nearPeople(req, res, next) {
 module.exports = {
   signUp,
   login,
-  nearPeople
+  nearPeople,
+  logout,
 };

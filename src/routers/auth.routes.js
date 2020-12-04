@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const { getUserRegister } = require('../utils/RequestsAPI');
+const passport = require("passport");
 
 const router = express.Router();
 
@@ -37,5 +38,11 @@ router.get('/signup/spotify', async (req, res) => {
 router.post("/signup", userController.signUp);
 
 router.post("/login", userController.login);
+
+router.post(
+	"/logout",
+	passport.authenticate("bearer",{ session: false}),
+	 userController.logout
+	 );
 
 module.exports = router;

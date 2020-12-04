@@ -1,10 +1,12 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const ExtractJWT = require("passport-jwt").ExtractJwt;
+const BearerStrategy = require("passport-http-bearer").Strategy;
 
 const db = require("../../models");
 const getSanitizedUser = require("./getSanitizedUser");
 const config = require("../../config/app-config")[process.env.NODE_ENV || "development"];
+
+const { User } = require("../../models");
 
 passport.use(
   "signup",
@@ -96,6 +98,19 @@ passport.use(
     },
   ),
 );
+
+passport.use("bearer",
+  new BearerStrategy(
+    function(token, done) {
+      User.findOne({ token: token }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) { return done(null, false); }
+        return done(null, user, { scope: 'all' });
+      });
+    }
+  )
+);
+
 
 module.exports = {
   initialize: passport.initialize(),
