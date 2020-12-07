@@ -61,14 +61,13 @@ exports.generateToken = async function(refreshToken) {
         });
         return {data: tokens.data, error: null};
     } catch (e) {
-        console.log(e);
         return {data: null, error: e};
     }
 }
 
 exports.getSong = async function(token) {
     try {
-        const music = await axios({
+        const res = await axios({
             method: 'GET',
             url: 'https://api.spotify.com/v1/me/player/currently-playing',
             headers: {
@@ -77,9 +76,20 @@ exports.getSong = async function(token) {
                 'Accept': 'application/json'
             }
         });
-        return {data: music, error: null};
+        if (!res.data.item) return {data: null, error: "No current song"};
+
+        const music = {
+            artist: res.data.item.artists[0].name,
+            music: res.data.item.name,
+            image: res.data.item.album.images,
+            uri: res.data.item.uri,
+        };
+
+        return {
+            data: music,
+            error: null
+        };
     } catch (e) {
-        console.log(e);
         return {data: null, error: e};
     }
 }

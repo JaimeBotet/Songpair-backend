@@ -127,9 +127,12 @@ async function login(req, res, next) {
 }
 
 async function nearPeople(req, res, next) {
+  const nearUsers = [];
   const { point } = req.body;
 
-  const nearUsers = await db.User.find({
+  await updateUserLocation(point, req.user, next);
+
+  const users = await db.User.find({
     location:
       { $near:
          {
@@ -138,13 +141,33 @@ async function nearPeople(req, res, next) {
          }
       }
   });
-  console.log(nearUsers);
 
-  // const userSong = await getSong(nearUsers[0].token);
-  // console.log(userSong);
+  if (!users) return res.status(404).send({data: null, error: "No near users"});
 
+  for (let user of users) {
+    const token = await generateToken(user.refreshToken);
+    const userSong = await getSong(token.data.access_token);
 
-  res.json({data: nearUsers, error: null});
+    if (userSong.data) {
+      nearUsers.push({
+        name: user.name,
+        avatar: user.avatar,
+        spotifyID: user.spotifyID,
+        location: user.location,
+        currentSong: userSong.data
+      });
+    }
+  }
+
+  if (nearUsers.length === 0) return res.status(404).send({data: null, error: "No near users"});
+
+  return res.status(200).send({data: nearUsers, error: null});
+}
+
+async function updateUserLocation(point, user, next) {
+  const dbUser = await db.User.findOne({ token: user.token }).catch(next);
+  dbUser.location.coordinates = [point.long, point.lat];
+  await dbUser.save().catch(next);
 }
 
 module.exports = {
