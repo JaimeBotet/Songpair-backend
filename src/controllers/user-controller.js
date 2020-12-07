@@ -134,7 +134,7 @@ async function nearPeople(req, res, next) {
       { $near:
          {
            $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
-           $maxDistance: 5000
+           $maxDistance: 20000
          }
       }
   });
