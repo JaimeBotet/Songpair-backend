@@ -159,6 +159,8 @@ async function nearPeople(req, res, next) {
     }
   }
 
+  if (nearUsers.length === 0) res.status(404).send({data: null, error: "No near users"});
+
   res.status(200).send({data: nearUsers, error: null});
 }
 
