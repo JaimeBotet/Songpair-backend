@@ -142,7 +142,7 @@ async function nearPeople(req, res, next) {
       }
   });
 
-  if (!users) res.status(404).send({data: null, error: "No near users"});
+  if (!users) return res.status(404).send({data: null, error: "No near users"});
 
   for (let user of users) {
     const token = await generateToken(user.refreshToken);
@@ -159,9 +159,9 @@ async function nearPeople(req, res, next) {
     }
   }
 
-  if (nearUsers.length === 0) res.status(404).send({data: null, error: "No near users"});
+  if (nearUsers.length === 0) return res.status(404).send({data: null, error: "No near users"});
 
-  res.status(200).send({data: nearUsers, error: null});
+  return res.status(200).send({data: nearUsers, error: null});
 }
 
 async function updateUserLocation(point, user, next) {
