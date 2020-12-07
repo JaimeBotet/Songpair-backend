@@ -127,25 +127,40 @@ async function login(req, res, next) {
 }
 
 async function nearPeople(req, res, next) {
+  const nearUsers = [];
   const { point } = req.body;
 
-  const nearUsers = await db.User.find({
+  const users = await db.User.find({
     location:
       { $near:
          {
            $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
-           $maxDistance: 5000
+           $maxDistance: 20000
          }
       }
   });
-  console.log(nearUsers);
 
-  // const userSong = await getSong(nearUsers[0].token);
-  // console.log(userSong);
+  if (!users) res.status(404).send({data: null, error: "No near users"});
 
+  for (let user of users) {
+    const token = await generateToken(user.refreshToken);
+    const userSong = await getSong(token.data.access_token);
 
-  res.json({data: nearUsers, error: null});
+    if (userSong.data) {
+      nearUsers.push({
+        name: user.name,
+        avatar: user.avatar,
+        spotifyID: user.spotifyID,
+        location: user.location,
+        currentSong: userSong.data
+      });
+    }
+  }
+
+  res.status(200).send({data: nearUsers, error: null});
 }
+
+
 
 module.exports = {
   signUp,
