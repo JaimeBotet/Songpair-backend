@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+const errorMiddleware = require("./middleware/error-middleware");
 const authRouter = require("./routers/auth.routes.js");
 const mapRouter = require("./routers/map.routes.js");
 
@@ -16,5 +17,7 @@ app.use(express.json());
 
 app.use('/', authRouter);
 app.use('/map', mapRouter);
+
+app.use(errorMiddleware);
 
 module.exports = app;

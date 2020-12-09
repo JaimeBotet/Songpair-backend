@@ -139,7 +139,8 @@ async function nearPeople(req, res, next) {
            $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
            $maxDistance: 20000
          }
-      }
+      },
+      token: {$ne:null}
   });
 
   if (!users) return res.status(404).send({data: null, error: "No near users"});
@@ -166,7 +167,7 @@ async function nearPeople(req, res, next) {
 
 async function updateUserLocation(req, res, next) {
   const dbUser = await db.User.findOne({ token: req.user.token }).catch(next);
-  dbUser.location.coordinates = [req.body.point.long, req.body.point.lat];
+  dbUser.location = {type: "Point", coordinates: [req.body.point.long, req.body.point.lat]};
   await dbUser.save().catch(next);
 }
 
