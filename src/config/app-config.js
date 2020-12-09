@@ -12,7 +12,7 @@ if (result.error) {
 module.exports = {
 	development: {
 		app: {
-			port: process.env.APP_PORT,
+			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
@@ -24,7 +24,7 @@ module.exports = {
 	},
 	test: {
 		app: {
-			port: process.env.APP_PORT,
+			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
@@ -36,7 +36,7 @@ module.exports = {
 	},
 	production: {
 		app: {
-			port: process.env.APP_PORT,
+			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
 			clientDomain: process.env.CLIENT_DOMAIN,
