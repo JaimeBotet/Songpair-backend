@@ -7,7 +7,7 @@ const connect = require("./db/connect");
 
 connect()
   .then(async () => {
-    app.listen(config.app.port, () => {
+    app.listen(process.env.port, () => {
         console.log(`Server listening on http://localhost:${config.app.port}`);
     });
   })
