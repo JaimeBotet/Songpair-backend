@@ -11,4 +11,10 @@ router.post(
   userController.nearPeople
 );
 
+router.post(
+  "/update-position",
+  passport.authenticate("bearer",{ session: false}),
+  userController.updateUserLocation
+);
+
 module.exports = router;

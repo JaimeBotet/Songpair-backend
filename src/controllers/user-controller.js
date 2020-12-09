@@ -130,7 +130,7 @@ async function nearPeople(req, res, next) {
   const nearUsers = [];
   const { point } = req.body;
 
-  await updateUserLocation(point, req.user, next);
+  await updateUserLocation(req, res, next);
 
   const users = await db.User.find({
     location:
@@ -164,15 +164,19 @@ async function nearPeople(req, res, next) {
   return res.status(200).send({data: nearUsers, error: null});
 }
 
-async function updateUserLocation(point, user, next) {
-  const dbUser = await db.User.findOne({ token: user.token }).catch(next);
-  dbUser.location.coordinates = [point.long, point.lat];
+async function updateUserLocation(req, res, next) {
+  const dbUser = await db.User.findOne({ token: req.user.token }).catch(next);
+  dbUser.location.coordinates = [req.body.point.long, req.body.point.lat];
   await dbUser.save().catch(next);
 }
+
+
+
 
 module.exports = {
   signUp,
   login,
   nearPeople,
   logout,
+  updateUserLocation
 };
