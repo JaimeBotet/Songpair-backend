@@ -166,7 +166,7 @@ async function nearPeople(req, res, next) {
 
 async function updateUserLocation(req, res, next) {
   const dbUser = await db.User.findOne({ token: req.user.token }).catch(next);
-  dbUser.location.coordinates = [req.body.point.long, req.body.point.lat];
+  dbUser.location = {type: "Point", coordinates: [req.body.point.long, req.body.point.lat]};
   await dbUser.save().catch(next);
 }
 
