@@ -139,7 +139,8 @@ async function nearPeople(req, res, next) {
            $geometry: { type: "Point",  coordinates: [ point.long, point.lat ] },
            $maxDistance: 20000
          }
-      }
+      },
+      token: {$ne:null}
   });
 
   if (!users) return res.status(404).send({data: null, error: "No near users"});
