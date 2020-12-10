@@ -4,10 +4,12 @@ const app = require("./server");
 
 const config = require("./config/app-config")[process.env.NODE_ENV || "development"];
 const connect = require("./db/connect");
+const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT || 8080;
 
 connect()
   .then(async () => {
-    app.listen(process.env.port, () => {
+    app.listen(port, host, () => {
         console.log(`Server listening on http://localhost:${config.app.port}`);
     });
   })

@@ -35,7 +35,7 @@ router.get('/signup/spotify', async (req, res) => {
 	}
 });
 router.get('/', (req,res) =>{
-	res.send("hello");
+	res.send("hello heroku");
 })
 router.post("/signup", userController.signUp);
 
