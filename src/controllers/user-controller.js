@@ -3,6 +3,7 @@ const passport = require("passport");
 const db = require("../models");
 const getSanitizedUser = require("../utils/auth/getSanitizedUser");
 const { generateToken, getSong } = require('../utils/RequestsAPI');
+const likeController = require("../controllers/like-controller");
 
 async function signUp(req, res, next) {
   passport.authenticate("signup", async (error, user, info) => {
@@ -155,7 +156,8 @@ async function nearPeople(req, res, next) {
         avatar: user.avatar,
         spotifyID: user.spotifyID,
         location: user.location,
-        currentSong: userSong.data
+        currentSong: userSong.data,
+        like: await likeController.get(userSong.data, user.spotifyID, req.user.spotifyID)
       });
     }
   }
@@ -170,9 +172,6 @@ async function updateUserLocation(req, res, next) {
   dbUser.location = {type: "Point", coordinates: [req.body.point.long, req.body.point.lat]};
   await dbUser.save().catch(next);
 }
-
-
-
 
 module.exports = {
   signUp,
