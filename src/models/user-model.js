@@ -35,12 +35,6 @@ const UserSchema = new mongoose.Schema(
     avatar: {type: String},
     token: { type: String },
     refreshToken: { type: String },
-    currentSong: {
-      img: String,
-      title: String,
-      artist: String,
-      spotfyID: String
-    },
     location: {
       type: {
         String,
