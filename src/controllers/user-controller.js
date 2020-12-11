@@ -189,6 +189,21 @@ async function getProfile(req, res, next) {
   return res.status(200).send({data: profile, error: null});
 }
 
+async function getChats(req, res, next) {
+  const user = await db.User.findOne({ spotifyID: req.params.id }).catch(next);
+
+  if (!user) return res.status(404).send({data: null, error: "User not found"});
+
+  const token = await generateToken(user.refreshToken);
+  const currentSong = await getSong(token.data.access_token);
+
+  let profile = getSanitizedProfile(user.toObject());
+  profile.currentSong = currentSong.data ? currentSong.data : null;
+  if (profile.currentSong) profile.currentSong.like = await likeController.get(currentSong.data, user.spotifyID, req.user.spotifyID)
+
+  return res.status(200).send({data: profile, error: null});
+}
+
 module.exports = {
   signUp,
   login,
@@ -196,4 +211,5 @@ module.exports = {
   logout,
   updateUserLocation,
   getProfile,
+  getChats,
 };
