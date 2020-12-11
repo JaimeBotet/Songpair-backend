@@ -184,6 +184,7 @@ async function getProfile(req, res, next) {
 
   let profile = getSanitizedProfile(user.toObject());
   profile.currentSong = currentSong.data ? currentSong.data : null;
+  if (profile.currentSong) profile.currentSong.like = await likeController.get(currentSong.data, user.spotifyID, req.user.spotifyID)
 
   return res.status(200).send({data: profile, error: null});
 }
