@@ -2,6 +2,7 @@ const passport = require("passport");
 
 const db = require("../models");
 const getSanitizedUser = require("../utils/auth/getSanitizedUser");
+const getSanitizedProfile = require("../utils/auth/getSanitizedProfile");
 const { generateToken, getSong } = require('../utils/RequestsAPI');
 const likeController = require("../controllers/like-controller");
 
@@ -173,10 +174,25 @@ async function updateUserLocation(req, res, next) {
   await dbUser.save().catch(next);
 }
 
+async function getProfile(req, res, next) {
+  const user = await db.User.findOne({ spotifyID: req.params.id }).catch(next);
+
+  if (!user) return res.status(404).send({data: null, error: "User not found"});
+
+  const token = await generateToken(user.refreshToken);
+  const currentSong = await getSong(token.data.access_token);
+
+  let profile = getSanitizedProfile(user.toObject());
+  profile.currentSong = currentSong.data ? currentSong.data : null;
+
+  return res.status(200).send({data: profile, error: null});
+}
+
 module.exports = {
   signUp,
   login,
   nearPeople,
   logout,
-  updateUserLocation
+  updateUserLocation,
+  getProfile,
 };
