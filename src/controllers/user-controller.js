@@ -179,12 +179,22 @@ async function getProfile(req, res, next) {
 
   if (!user) return res.status(404).send({data: null, error: "User not found"});
 
-  const token = await generateToken(user.refreshToken);
-  const currentSong = await getSong(token.data.access_token);
+  // Getting current song with a refresh token
+  const token = await generateToken(user.refreshToken).catch(next);
+  const currentSong = await getSong(token.data.access_token).catch(next);
 
+  // Create a profile object
   let profile = getSanitizedProfile(user.toObject());
-  profile.currentSong = currentSong.data ? currentSong.data : null;
-  if (profile.currentSong) profile.currentSong.like = await likeController.get(currentSong.data, user.spotifyID, req.user.spotifyID)
+
+  // Verify if user is playing a song
+  profile.currentSong = currentSong.data ? currentSong.data : null
+  // If is playing a song get actual user like to this song and total likes
+  if (profile.currentSong) {
+    profile.currentSong.totalLikes = await likeController.getMusicLikes(user.spotifyID, currentSong.data.uri).catch(next);
+    profile.currentSong.like = await likeController.get(currentSong.data, user.spotifyID, req.user.spotifyID).catch(next);
+  }
+  // Gets likes numbers from this user's profile
+  profile.likes = await likeController.getProfileLikes(user.spotifyID).catch(next);
 
   return res.status(200).send({data: profile, error: null});
 }
