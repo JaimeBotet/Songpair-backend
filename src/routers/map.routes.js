@@ -14,7 +14,9 @@ router.post(
 router.post(
   "/update-position",
   passport.authenticate("bearer",{ session: false}),
-  userController.updateUserLocation
-);
+  async (req, res, next) => {
+    await userController.updateUserLocation(req, res, next);
+    return res.status(200).send({data: true, error: null});
+});
 
 module.exports = router;
