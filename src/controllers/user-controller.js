@@ -149,17 +149,20 @@ async function nearPeople(req, res, next) {
 
   for (let user of users) {
     const token = await generateToken(user.refreshToken);
-    const userSong = await getSong(token.data.access_token);
 
-    if (userSong.data) {
-      nearUsers.push({
-        name: user.name,
-        avatar: user.avatar,
-        spotifyID: user.spotifyID,
-        location: user.location,
-        currentSong: userSong.data,
-        like: await likeController.get(userSong.data, user.spotifyID, req.user.spotifyID)
-      });
+    if (!token.error) {
+      const userSong = await getSong(token.data.access_token);
+
+      if (userSong.data) {
+        nearUsers.push({
+          name: user.name,
+          avatar: user.avatar,
+          spotifyID: user.spotifyID,
+          location: user.location,
+          currentSong: userSong.data,
+          like: await likeController.get(userSong.data, user.spotifyID, req.user.spotifyID)
+        });
+      }
     }
   }
 
