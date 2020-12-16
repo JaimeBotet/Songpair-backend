@@ -163,6 +163,8 @@ async function nearPeople(req, res, next) {
           like: await likeController.get(userSong.data, user.spotifyID, req.user.spotifyID)
         });
       }
+    } else {
+      if (token.error.status === 503) return res.status(503).send({data: null, error: "Service unavailable"});
     }
   }
 
