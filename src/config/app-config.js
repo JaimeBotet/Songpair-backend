@@ -15,7 +15,7 @@ module.exports = {
 			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
-			clientDomain: process.env.CLIENT_DOMAIN,
+			clientDomain: process.env.CLIENT_DOMAIN_DEV,
 			BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS),
 		},
 		db: {
@@ -27,7 +27,7 @@ module.exports = {
 			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
-			clientDomain: process.env.CLIENT_DOMAIN,
+			clientDomain: process.env.CLIENT_DOMAIN_DEV,
 			BCRYPT_SALT_ROUNDS: 10,
 		},
 		db: {
@@ -39,7 +39,7 @@ module.exports = {
 			port: process.env.PORT,
 			accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
 			refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
-			clientDomain: process.env.CLIENT_DOMAIN_PROD,
+			clientDomain: process.env.CLIENT_DOMAIN,
 			BCRYPT_SALT_ROUNDS: parseInt(process.env.BCRYPT_SALT_ROUNDS),
 		},
 		db: {
