@@ -26,6 +26,31 @@ async function check(req, res, next) {
   }
 }
 
+async function getMusicLikes(user, uri) {
+  const totalLikes = await  db.Like.countDocuments({receiverID: user, "song.uri": uri});
+  return totalLikes;
+}
+
+async function getProfileLikes(user) {
+  const totalLikes = await  db.Like.countDocuments({receiverID: user});
+  let mostLiked = await db.Like.aggregate(
+    [
+      { $match: { "receiverID": user} },
+      {
+        $group : {
+          _id : "$song",
+          "count": { "$sum": 1 },
+        }
+      },
+      {$sort : { count: -1 }}
+    ]
+  );
+
+  mostLiked = mostLiked.length === 0 ? null : {...mostLiked[0]._id, likesCount: mostLiked[0].count};
+
+  return {total: totalLikes, mostLiked: mostLiked};
+}
+
 async function update(req, res, next) {
   const {song, receiver} = req.body
 
@@ -53,4 +78,6 @@ module.exports = {
   get,
   check,
   update,
+  getMusicLikes,
+  getProfileLikes,
 };

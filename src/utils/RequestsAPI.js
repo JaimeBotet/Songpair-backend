@@ -61,7 +61,7 @@ exports.generateToken = async function(refreshToken) {
         });
         return {data: tokens.data, error: null};
     } catch (e) {
-        return {data: null, error: e};
+        return {data: null, error: e.response};
     }
 }
 
