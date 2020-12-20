@@ -11,15 +11,15 @@ const socketCon = (server) => {
     });
 
     io.on('connection', (socket) => {
-        console.log("Made Socket connection");
         socket.on('join', ({ user, room }, callback) => {
-        //it will be announced when each participant "joins the room"
-        socket.join(room);
-        //here we send the room number/id to the other user
-    
-        socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
-    
-        callback();
+            console.log("Made Socket connection in room " + room);
+            //it will be announced when each participant "joins the room"
+            socket.join(room);
+            //here we send the room number/id to the other user
+        
+            socket.broadcast.to(room).emit('message', { user: 'admin', text: `${user.name} has joined!` });
+        
+            callback();
         });
     
         //When a user in the frontend "sends" a message, we broadcast it back to all the users in the room
@@ -29,8 +29,8 @@ const socketCon = (server) => {
         });
     
         //it will be announced when each participant "leaves the room"
-        socket.on('disconnect', ({ name, room }) => {
-        io.to(room).emit('message', { user: 'Admin', text: `${name} has left.` });
+        socket.on('leaveChat', ({ user, room }) => {
+        io.to(room).emit('message', { user: 'Admin', text: `${user.name} has left.` });
         })
     });
 }
