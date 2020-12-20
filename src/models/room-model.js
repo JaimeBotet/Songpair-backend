@@ -20,7 +20,7 @@ const RoomSchema = new mongoose.Schema(
   },
 );
 
-RoomSchema.plugin(beautifyUnique);
+// RoomSchema.plugin(beautifyUnique);
 
 const Room = mongoose.model("room", RoomSchema);
 

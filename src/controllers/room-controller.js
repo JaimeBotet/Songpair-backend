@@ -1,11 +1,6 @@
 const passport = require("passport");
-
+const config = require("../config/app-config")[process.env.NODE_ENV || "development"];
 const db = require("../models");
-const getSanitizedUser = require("../utils/auth/getSanitizedUser");
-const getSanitizedProfile = require("../utils/auth/getSanitizedProfile");
-const { generateToken, getSong } = require('../utils/RequestsAPI');
-const likeController = require("./like-controller");
-
 
 
 async function getChats(req, res, next) {
@@ -24,6 +19,7 @@ async function openRoom(req, res, next) {
         participant,
     } = req.body;
     
+    console.log("Received request to open chat with participant: " + participant);
     //Information sent from the frontend:
     //user -> token
     //participant -> spotifyID
@@ -33,7 +29,8 @@ async function openRoom(req, res, next) {
     //We check if there is a chat room opened already, created either by the user or the other participant
     const room = await db.Room.findOne({ $or:[{creatorID:creatorID , participantID:participantID}, {creatorID:participantID , participantID:creatorID} ]}).catch(next);
     
-    if(room) return res.status(200).send({data: room._id, error: null});
+    // if(room) return res.status(200).send({data: room._id, error: null});
+    if(room) return res.redirect(config.app.clientDomain + "/chat/" + room._id);
 
     const newRoom = await db.Room.create({
         creatorID: creatorID,
@@ -43,8 +40,9 @@ async function openRoom(req, res, next) {
     });
 
     await newRoom.save().catch(next);
+    // console.log(newRoom);
 
-    return res.status(200).send({data: newRoom._id, error: null});
+    return res.redirect(config.app.clientDomain + "/chat/" + newRoom._id);
 }
 
 module.exports = {
