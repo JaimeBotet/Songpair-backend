@@ -4,12 +4,18 @@ require("dotenv").config();
 
 const router = express.Router();
 
-const userController = require("../controllers/user-controller");
+const roomController = require("../controllers/room-controller");
 
 router.get(
-  "/:id",
+  "/",
   passport.authenticate("bearer",{ session: false}),
-  userController.getChats
+  roomController.getChats
+);
+
+router.post(
+  "/room",
+  passport.authenticate("bearer",{ session: false}),
+  roomController.openRoom
 );
 
 
