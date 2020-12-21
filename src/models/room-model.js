@@ -6,12 +6,12 @@ const RoomSchema = new mongoose.Schema(
   {
     creatorID : {
       type: String,
-      required: [true, "Like sender is required"],
+      required: [true, "Creator ID is required"],
       ref: "user"
     },
     participantID : {
       type: String,
-      required: [true, "Like receiver is required"],
+      required: [true, "Participant ID is required"],
       ref: "user"
     }
   },
@@ -20,7 +20,7 @@ const RoomSchema = new mongoose.Schema(
   },
 );
 
-// RoomSchema.plugin(beautifyUnique);
+RoomSchema.plugin(beautifyUnique);
 
 const Room = mongoose.model("room", RoomSchema);
 
