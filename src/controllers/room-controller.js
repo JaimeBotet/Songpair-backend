@@ -28,7 +28,7 @@ async function openRoom(req, res, next) {
     //We check if there is a chat room opened already, created either by the user or the other participant
     const room = await db.Room.findOne({ $or:[{creatorID:creator._id , participantID:participant._id}, {creatorID:participant._id , participantID:creator._id} ]}).catch(next);
 
-    if(room) return res.status(200).send({data: room._id, error: null});
+    if(room) return res.status(200).send({data: room, error: null});
 
     const newRoom = await db.Room.create({
         creatorID: creator._id,
@@ -37,7 +37,7 @@ async function openRoom(req, res, next) {
         return next(error);
     });
 
-    return res.status(200).send({data: newRoom._id, error: null});
+    return res.status(200).send({data: newRoom, error: null});
 }
 
 module.exports = {

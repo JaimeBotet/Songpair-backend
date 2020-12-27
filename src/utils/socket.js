@@ -1,6 +1,7 @@
 const config = require('../config/app-config')[process.env.NODE_ENV || "development"];
 const socketio = require("socket.io");
 
+
 const socketCon = (server) => {
     const io = socketio(server, {
         cors: {
@@ -10,8 +11,15 @@ const socketCon = (server) => {
     });
 
     io.on('connection', (socket) => {
+        
+        
         socket.on('join', ({ user, room }, callback) => {
             socket.join(room);
+            
+            //We notify the frontend saying a new socket connection has been made. In the socket we filter if it applies to us
+            socket.broadcast.emit('connection', {user:user, room: room});
+
+
             //it will be announced to the room when a participant "joins the room"
             socket.broadcast.to(room).emit('message', { user: 'Server', text: `${user.name} has joined!` });
             callback();
