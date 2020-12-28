@@ -2,7 +2,6 @@ const passport = require("passport");
 const config = require("../config/app-config")[process.env.NODE_ENV || "development"];
 const db = require("../models");
 
-
 async function getChats(req, res, next) {
     const user = await db.User.findOne({ spotifyID: req.params.id }).catch(next);
 
