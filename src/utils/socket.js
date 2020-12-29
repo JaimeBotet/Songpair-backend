@@ -13,12 +13,14 @@ const socketCon = (server) => {
     io.on('connection', async (socket) => {
         if (socket.handshake.query['token']) await socketController.updateSocket(socket.handshake.query['token'], socket.id);
 
-        socket.on('newChat', async ({ sender, receiver }) => {
+        socket.on('newChat', async ({ sender, receiver, room }) => {
             const receiverSocket = await socketController.getSocket(receiver);
-            io.to(receiverSocket).emit("newMessage", {sender})
+            io.to(receiverSocket).emit("newMessage", {sender, room})
         });
 
-        /* socket.on('join', ({ user, room }, callback) => {
+        socket.on('join', ({ user, room } ) => {
+            console.log(user);
+            console.log(room);
             socket.join(room);
 
             //We notify the frontend saying a new socket connection has been made. In the socket we filter if it applies to us
@@ -27,10 +29,9 @@ const socketCon = (server) => {
 
             //it will be announced to the room when a participant "joins the room"
             socket.broadcast.to(room).emit('message', { user: 'Server', text: `${user.name} has joined!` });
-            callback();
         });
 
-        //When a user in the frontend "sends" a message, we broadcast it back to the room
+        /* //When a user in the frontend "sends" a message, we broadcast it back to the room
         socket.on('sendMessage', ({user, room, message}, callback) => {
             io.to(room).emit('message', { user: user.name, text: message });
             callback();
