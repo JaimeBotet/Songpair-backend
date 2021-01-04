@@ -18,29 +18,25 @@ const socketCon = (server) => {
             io.to(receiverSocket).emit("newMessage", {sender, room})
         });
 
-        socket.on('join', ({ user, room } ) => {
-            console.log(user);
-            console.log(room);
+        socket.on('join', ({ user, room }, callback) => {
+            console.log(socket.id);
             socket.join(room);
-
-            //We notify the frontend saying a new socket connection has been made. In the socket we filter if it applies to us
-            socket.broadcast.emit('connection', {user:user, room: room});
-
 
             //it will be announced to the room when a participant "joins the room"
             socket.broadcast.to(room).emit('message', { user: 'Server', text: `${user.name} has joined!` });
+            callback();
         });
 
-        /* //When a user in the frontend "sends" a message, we broadcast it back to the room
-        socket.on('sendMessage', ({user, room, message}, callback) => {
-            io.to(room).emit('message', { user: user.name, text: message });
-            callback();
+        //When a user in the frontend "sends" a message, we broadcast it back to the room
+        socket.on('sendMessage', ({user, room, message}) => {
+            console.log(socket.rooms)
+            socket.to(room).emit('message', { user: user.name, text: message });
         });
 
         //it will be announced when each participant "leaves the room"
         socket.on('leaveChat', ({ user, room }) => {
-        io.to(room).emit('message', { user: 'Server', text: `${user.name} has left.` });
-        }) */
+            io.to(room).emit('message', { user: 'Server', text: `${user.name} has left.` });
+        })
     });
 }
 
