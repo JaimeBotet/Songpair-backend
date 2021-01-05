@@ -19,7 +19,6 @@ const socketCon = (server) => {
         });
 
         socket.on('join', ({ user, room }, callback) => {
-            console.log(socket.id);
             socket.join(room);
 
             //it will be announced to the room when a participant "joins the room"
@@ -29,7 +28,6 @@ const socketCon = (server) => {
 
         //When a user in the frontend "sends" a message, we broadcast it back to the room
         socket.on('sendMessage', ({user, room, message}) => {
-            console.log(socket.rooms)
             socket.to(room).emit('message', { user: user.name, text: message });
         });
 
