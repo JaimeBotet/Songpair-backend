@@ -9,7 +9,8 @@ async function getChats(req, res, next) {
             ]
         }).catch(next);
 
-    if (!chats) return res.status(404).send({data: null, error: "No active chats"});
+    if (chats.length === 0) return res.status(404).send({data: null, error: "No active chats"});
+    console.log(chats);
 
     let filterChats = [];
 
