@@ -51,7 +51,6 @@ async function openRoom(req, res, next) {
 
 async function closeRoom(id) {
     const room = await db.Room.findOneAndDelete({"_id": id,})
-    console.log(room);
 }
 
 module.exports = {
