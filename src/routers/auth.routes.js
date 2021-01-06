@@ -34,9 +34,7 @@ router.get('/signup/spotify', async (req, res) => {
 			.json({data: null, error: formData.error});
 	}
 });
-router.get('/', (req,res) =>{
-	res.send("hello heroku");
-})
+
 router.post("/signup", userController.signUp);
 
 router.post("/login", userController.login);
