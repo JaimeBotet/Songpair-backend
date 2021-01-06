@@ -1,14 +1,24 @@
-const passport = require("passport");
-const config = require("../config/app-config")[process.env.NODE_ENV || "development"];
 const db = require("../models");
+const getSanitizedProfile = require("../utils/auth/getSanitizedProfile");
 
 async function getChats(req, res, next) {
-    const user = await db.User.findOne({ spotifyID: req.params.id }).catch(next);
+    const chats = await db.Room.find({
+        $or:[
+                {creatorID:req.user._id},
+                {participantID:req.user._id}
+            ]
+        }).catch(next);
 
-    if (!user) return res.status(404).send({data: null, error: "User not found"});
-    let chats = []
+    if (!chats) return res.status(404).send({data: null, error: "No active chats"});
 
-    return res.status(200).send({data: chats, error: null});
+    let filterChats = [];
+
+    for (chat of chats) {
+        let user = chat.creatorID == req.user._id ? await db.User.findOne({_id:chat.participantID}) : await db.User.findOne({_id:chat.creatorID});
+        filterChats.push({room: chat._id, user: getSanitizedProfile(user.toObject())})
+    }
+
+    return res.status(200).send({data: filterChats, error: null});
 }
 
 async function openRoom(req, res, next) {
@@ -17,7 +27,7 @@ async function openRoom(req, res, next) {
         sender,
         receiver,
     } = req.body;
-    
+
     //Information sent from the frontend:
     //user -> token
     //participant -> spotifyID
@@ -39,7 +49,13 @@ async function openRoom(req, res, next) {
     return res.status(200).send({data: newRoom, error: null});
 }
 
+async function closeRoom(id) {
+    const room = await db.Room.findOneAndDelete({"_id": id,})
+    console.log(room);
+}
+
 module.exports = {
     getChats,
-    openRoom
+    openRoom,
+    closeRoom
 };

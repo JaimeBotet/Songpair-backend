@@ -18,5 +18,4 @@ router.post(
   roomController.openRoom
 );
 
-
 module.exports = router;
