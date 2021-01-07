@@ -1,45 +1,26 @@
+const db = require('../models');
 import { getMusicLikes, getProfileLikes,} from "../controllers/like-controller";
 
-/**
- * Finish the test
- */
+jest.mock('db');
+
 describe("like test-suite", () => {
 
-    const user = {
-        receiverID = "1234"
-    }
-
-  it("get the Likes of a song", () => {
-    expect(getMusicLikes).toEqual("something");
-  });
-
-  it("get the likes of a profile", () => {
-      expect(getProfileLikes).toEqual("something");
-  })
+    const user = "bhydnod4radusm2xujyld1ykb";
+    const uri = "spotify:track:0TxMRiAvI1s0L821BJJWzx";
+    const musicLikes = 3;
+    const profileLikes = 3;
 
 
-  //example tests & functions
+    
+    it("get the Likes of a song", () => {
+        db.Like.countDocuments.mockResolvedValue(musicLikes);
+        const result = await getMusicLikes(user, uri);
+        expect(result).toEqual(musicLikes);
+    });
 
-  //Example 1
-  function sanitizeUserData(user) {
-    const { password, role, ...rest } = user;
-    return rest;
-  }
-  test("sanitizeUserData returns an object without sensitive information", () => {
-    const safeUserData = {
-      firstName: "Alex",
-      lastName: "Marks",
-      age: 20,
-      jobTitle: "Developer",
-    };
-  
-    const userWithSensitiveInformation = {
-      ...safeUserData,
-      password: "a98dsj9a8sdj89asd89jasd",
-      role: "ADMIN",
-    };
-  
-    // Finish the test
-    expect(sanitizeUserData(userWithSensitiveInformation)).toEqual(safeUserData);
-  });
+    it.skip("get the likes of a profile", () => {
+        expect(getProfileLikes(user)).toEqual(profileLikes);
+    })
+
+
 });

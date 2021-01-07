@@ -1,35 +1,26 @@
-import socket from "../controllers/socket-controller";
+const db = require('../models');
+import { updateSocket, getSocket,} from "../controllers/socket-controller";
 
-/**
- * Finish the test
- */
+jest.mock('db');
+
 describe("socket test-suite", () => {
-  let addSpy = null;
 
-  afterAll(() => {
-    if (addSpy.hasOwnProperty("mockRestore")) {
-      addSpy.mockRestore();
+    const user = {
+      _id = "5fc9ff9ed8206b6ac83ad9cb"
     }
-  });
+    const socket = "D5c1vgxXjx5_USQLAABK";
+    const receiver = "bhydnod4radusm2xujyld1ykb";
 
-  beforeAll(() => {
-    // 1. Spy on the 'add' method of the calculator object
-    //    and save the spy in the `addSpy` variable
-    addSpy = jest.spyOn(calculator, "add");
-  });
 
-  test("increment calls the calculator add method", () => {
-    /**
-     * 2. Execute the `increment` by passing the arguments: (4, 5, calculator)
-     */
-    increment(4, 5, calculator);
-    //
-    // 3. Make an assertion that the addSpy has been called 1 time
-    //
-    expect(addSpy).toHaveBeenCalledTimes(1);
-    // 4. Make an assertion that the addSpy has been called with the
-    // numbers 4 and 5
-    //
-    expect(addSpy).toHaveBeenCalledWith(4, 5);
-  });
+    it("get the socket of a chat room", () => {
+        db.User.findOne.mockResolvedValue(user);
+        db.Socket.findOne.mockResolvedValue(socket);
+        const result = await getSocket(receiver);
+        expect(result).toEqual(socket);
+    });
+
+    it.skip("another socket test", () => {
+        // expect(updateSocket(token,socketID)).toEqual('socket');
+    })
+
 });
